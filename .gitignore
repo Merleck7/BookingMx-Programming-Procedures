@@ -1,0 +1,30 @@
+# === Java / Spring Boot ===
+/backend/target/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/.idea/
+/backend/.mvn/
+*.iml
+*.log
+
+# === Node / Frontend ===
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vite/
+/frontend/.idea/
+/frontend/.parcel-cache/
+*.lock
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Backup or Temporary Files ===
+/backups/
+/temp/
+/*.bak
+
+# === Environment Files ===
+.env
+.env.local
