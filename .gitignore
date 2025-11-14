@@ -16,6 +16,9 @@
 /frontend/.parcel-cache/
 *.lock
 
+# Jest coverage folder
+/frontend/coverage/
+
 # === System Files ===
 .DS_Store
 Thumbs.db
@@ -28,3 +31,4 @@ Thumbs.db
 # === Environment Files ===
 .env
 .env.local
+
