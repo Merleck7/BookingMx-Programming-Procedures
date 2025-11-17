@@ -1,26 +1,51 @@
+/**
+ * Frontend Main Controller Script
+ * --------------------------------
+ * Handles:
+ *  - Graph UI interactions for locating nearby cities.
+ *  - Reservation UI: listing, creating, and canceling reservations.
+ *  - Communication with service modules (graph.js and api.js).
+ */
+
 import { sampleData, validateGraphData, buildGraph, getNearbyCities } from "./js/graph.js";
 import { listReservations, createReservation, cancelReservation } from "./js/api.js";
 
-// Graph UI
+/* ---------------------------------------------------------------------
+   GRAPH UI LOGIC
+------------------------------------------------------------------------*/
+
+// DOM references for graph functionality
 const form = document.getElementById("graph-form");
 const destinationEl = document.getElementById("destination");
 const maxDistanceEl = document.getElementById("maxDistance");
 const nearbyList = document.getElementById("nearby-list");
 
+// ---------------------------------------------------------------------------
+// Validate and build the graph using the imported sampleData.
+// This used to crash because sampleData was not exported previously.
+// ---------------------------------------------------------------------------
 const validation = validateGraphData(sampleData);
 const graph = validation.ok ? buildGraph(sampleData.cities, sampleData.edges) : null;
 
+/**
+ * Handles graph search form submission.
+ * Retrieves nearby cities based on user input and updates the UI list.
+ */
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (!graph) return;
+
   const dest = destinationEl.value.trim();
   const maxD = Number(maxDistanceEl.value);
+
   const results = getNearbyCities(graph, dest, maxD);
+
   nearbyList.innerHTML = "";
   if (results.length === 0) {
     nearbyList.innerHTML = `<li>No nearby cities found. Check destination or adjust distance.</li>`;
     return;
   }
+
   for (const r of results) {
     const li = document.createElement("li");
     li.textContent = `${r.city} — ${r.distance} km`;
@@ -28,23 +53,34 @@ form.addEventListener("submit", (e) => {
   }
 });
 
-// Reservations UI
+/* ---------------------------------------------------------------------
+   RESERVATIONS UI LOGIC
+------------------------------------------------------------------------*/
+
+// DOM references for reservation UI
 const resForm = document.getElementById("reservation-form");
 const refreshBtn = document.getElementById("refresh");
 const listEl = document.getElementById("reservation-list");
 
+/**
+ * Refreshes reservation list from backend.
+ */
 async function refreshReservations() {
   listEl.innerHTML = "<li>Loading...</li>";
+
   try {
     const items = await listReservations();
     listEl.innerHTML = "";
+
     for (const r of items) {
       const li = document.createElement("li");
+
       li.innerHTML = `
         <strong>#${r.id}</strong> ${r.guestName} @ ${r.hotelName}
         (${r.checkIn} → ${r.checkOut}) [${r.status}]
-        <button data-id=\"${r.id}\" class=\"cancel\">Cancel</button>
+        <button data-id="${r.id}" class="cancel">Cancel</button>
       `;
+
       listEl.appendChild(li);
     }
   } catch (e) {
@@ -52,14 +88,19 @@ async function refreshReservations() {
   }
 }
 
+/**
+ * Handles reservation creation.
+ */
 resForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const payload = {
     guestName: document.getElementById("guestName").value.trim(),
     hotelName: document.getElementById("hotelName").value.trim(),
     checkIn: document.getElementById("checkIn").value,
     checkOut: document.getElementById("checkOut").value
   };
+
   try {
     await createReservation(payload);
     await refreshReservations();
@@ -69,10 +110,15 @@ resForm.addEventListener("submit", async (e) => {
   }
 });
 
+/**
+ * Reservation cancellation handler.
+ */
 listEl.addEventListener("click", async (e) => {
   const btn = e.target.closest(".cancel");
   if (!btn) return;
+
   const id = btn.getAttribute("data-id");
+
   try {
     await cancelReservation(id);
     await refreshReservations();
@@ -81,5 +127,6 @@ listEl.addEventListener("click", async (e) => {
   }
 });
 
+// Initial load
 refreshBtn.addEventListener("click", refreshReservations);
 refreshReservations();

@@ -1,16 +1,185 @@
-:root { --bg:#0b1020; --card:#12183a; --text:#e6ebff; --muted:#a4b0f5; --accent:#7aa2ff; }
+/* -----------------------------------------
+   COLORS & THEME
+------------------------------------------ */
+:root {
+  --bg: #0b1020;
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --border-glass: rgba(255, 255, 255, 0.08);
+
+  --text: #e9eefe;
+  --muted: #9aa4d4;
+  --accent: #7aa2ff;
+
+  --card: rgba(15, 20, 40, 0.55);
+
+  --radius: 14px;
+  --shadow: 0px 8px 20px rgba(0,0,0,0.35);
+}
+
+/* -----------------------------------------
+   BASE
+------------------------------------------ */
 * { box-sizing: border-box; }
-body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); }
-header, footer { padding: 1rem 1.2rem; border-bottom: 1px solid #1e2650; }
-footer { border-top: 1px solid #1e2650; border-bottom:none; text-align:center; }
-h1 { margin: .2rem 0; }
-.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap:1rem; padding:1rem; }
-form { display:grid; gap:.6rem; margin:.8rem 0; }
-input, button { padding:.6rem .7rem; border-radius:.6rem; border:1px solid #2a3570; background:#0f1540; color:var(--text); }
-button { cursor:pointer; border-color:#3952b8; }
-button:hover { background:#162067; }
-.card { background: var(--card); border:1px solid #1e2650; border-radius: .8rem; padding: .8rem; }
-ul { list-style:none; padding-left:0; margin:0; }
-li { padding:.4rem .2rem; border-bottom:1px dashed #26306d; }
-li:last-child { border-bottom:none; }
-label { display:grid; gap:.3rem; color: var(--muted); }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* -----------------------------------------
+   LAYOUT
+------------------------------------------ */
+.header {
+  padding: 1.8rem;
+  border-bottom: 1px solid var(--border-glass);
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(12px);
+}
+
+.header-content {
+  max-width: 1160px;
+  margin: auto;
+}
+
+.container {
+  max-width: 1160px;
+  margin: auto;
+  padding: 2rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.footer {
+  text-align: center;
+  padding: 1.5rem;
+  opacity: 0.6;
+}
+
+/* -----------------------------------------
+   CARDS & GLASS EFFECT
+------------------------------------------ */
+.card {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow);
+}
+
+.glass {
+  backdrop-filter: blur(14px);
+  background: var(--bg-glass);
+}
+
+.sub-card {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-glass);
+}
+
+.section-title {
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.sub-title {
+  margin: 0 0 .7rem 0;
+  color: var(--muted);
+}
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* -----------------------------------------
+   FORMS & INPUTS
+------------------------------------------ */
+.form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-group {
+  display: grid;
+  gap: .4rem;
+}
+
+label {
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+input {
+  padding: .7rem .8rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  color: var(--text);
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+}
+
+/* -----------------------------------------
+   BUTTONS
+------------------------------------------ */
+.btn {
+  padding: .7rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: 0.18s ease;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #0a0f25;
+}
+
+.btn.primary:hover {
+  background: #89b0ff;
+}
+
+.btn.secondary {
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+}
+
+.btn.secondary:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.btn.small {
+  padding: .45rem .8rem;
+  font-size: .85rem;
+}
+
+/* -----------------------------------------
+   LISTS
+------------------------------------------ */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: .6rem .4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+li:last-child {
+  border-bottom: none;
+}

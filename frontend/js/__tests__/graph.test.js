@@ -1,23 +1,34 @@
+/**
+ * Graph Module Unit Tests
+ * ------------------------
+ * This suite verifies:
+ *  - Distance calculation between cities
+ *  - Edge cases such as empty lists and invalid data
+ *  - Graph rendering safety (ensures no crashes occur)
+ *
+ * CanvasRenderingContext2D is mocked because JSDOM does not implement it.
+ */
+
 import { drawGraph, findNearbyCities } from "../graph.js";
 
+// Provide a canvas context mock before tests run
 beforeAll(() => {
-  // Mock CanvasRenderingContext2D
-  HTMLCanvasElement.prototype.getContext = () => {
-    return {
-      clearRect: jest.fn(),
-      beginPath: jest.fn(),
-      arc: jest.fn(),
-      fill: jest.fn(),
-    };
-  };
+  HTMLCanvasElement.prototype.getContext = () => ({
+    clearRect: jest.fn(),
+    beginPath: jest.fn(),
+    arc: jest.fn(),
+    fill: jest.fn(),
+  });
 });
 
 describe("Graph Visualization Module", () => {
+
   test("should correctly find nearby cities and distances", () => {
     const cities = [
       { name: "A", x: 0, y: 0 },
-      { name: "B", x: 3, y: 4 }
+      { name: "B", x: 3, y: 4 } // 5 units away (3-4-5 triangle)
     ];
+
     const result = findNearbyCities(cities[0], cities);
     expect(result[0].distance).toBe(5);
   });
@@ -34,6 +45,8 @@ describe("Graph Visualization Module", () => {
   test("drawGraph should not crash with valid data", () => {
     document.body.innerHTML = '<canvas id="graph"></canvas>';
     const canvas = document.getElementById("graph");
+
+    // drawGraph should safely execute
     expect(() => drawGraph(canvas, [])).not.toThrow();
   });
 });

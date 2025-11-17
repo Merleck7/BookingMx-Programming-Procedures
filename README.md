@@ -1,175 +1,367 @@
-# 🏨 BookingMx
+# City Reservation System – Full Project Documentation (Backend + Frontend)
 
-BookingMx is a full-stack hotel reservation management system built with **Spring Boot** (Backend) and **Vanilla JavaScript + Jest** (Frontend).  
-Users can create, validate, and visualize reservations through a simple and responsive interface.
+## 📌 General Project Description
+This project is a **City Reservation System** that allows users to create reservations between cities represented as a **graph**.  
+The backend provides a REST API built with **Spring Boot**, while the frontend is a simple **JavaScript interface** for interacting with the API.
 
-The project focuses on:
-- Clean project architecture  
-- RESTful API consumption  
-- Frontend unit testing with Jest  
-- Backend unit testing with JUnit  
-- Reproducible documentation  
+### ✅ Main Functionalities
+- Register and manage **cities**.
+- Create and validate **reservations** between cities.
+- Represent connections using an internal **graph structure**.
+- Perform unit testing at the service level (JUnit + JaCoCo).
+- Fully documented frontend and backend for Sprint 3.
+
+
+```md
+# BOOKINGMX — Full-Stack Reservation System  
+A multi-module project that includes:
+
+- A **Spring Boot backend** handling hotel reservations, validation, DTO mapping, and REST APIs.
+- A **vanilla JavaScript frontend** implementing form handling, graph utilities, DOM rendering, and API communication.
+- **Automated testing** using JUnit 5 (backend) and Jest (frontend), with coverage reports.
+
+This document summarizes the project, installation steps, architecture, and test execution, as required for Sprint 3.
 
 ---
 
-## 📁 Project Structure (updated)
+# 📌 1. General Project Description
+
+**BOOKINGMX** is a learning-oriented full-stack application that simulates a hotel reservation management system. It includes:
+
+### ✅ **Backend (Java + Spring Boot)**  
+- Create, update, list, and cancel reservations.  
+- Input validation using DTOs and custom exceptions.  
+- In-memory repository (no database required).  
+- REST endpoints exposed at `/api/reservations`.
+
+### ✅ **Frontend (JavaScript)**  
+- Reservation form validation.  
+- Total price calculation service.  
+- DOM renderer for UI feedback.  
+- Graph utilities to calculate nearby cities (graph algorithms).  
+- Fully testable with Jest.
+
+### ✅ **Testing**  
+Includes two layers of tests:
+
+- **JUnit 5** for backend service logic.
+- **Jest** for frontend modules, including:
+  - graph utilities  
+  - form handler  
+  - DOM renderer  
+  - reservation service logic  
+
+---
+
+# 📁 2. Project Structure
 
 ```
-BOOKINGMX/
-│
+
+BOOKINGMX
 ├── backend/
 │   ├── src/
-│   │   ├── main/
-│   │   │   └── java/...
-│   │   └── test/
-│   │       └── java/
-│   │           └── com/
-│   │               └── bookingmx/
-│   │                   └── ReservationServiceTest.java
+│   │   ├── main/java/com/bookingmx/reservations/
+│   │   │   ├── controller/
+│   │   │   │   └── ReservationController.java
+│   │   │   ├── dto/
+│   │   │   │   ├── ReservationRequest.java
+│   │   │   │   └── ReservationResponse.java
+│   │   │   ├── exception/
+│   │   │   │   ├── ApiExceptionHandler.java
+│   │   │   │   ├── BadRequestException.java
+│   │   │   │   └── NotFoundException.java
+│   │   │   ├── model/
+│   │   │   │   ├── Reservation.java
+│   │   │   │   └── ReservationStatus.java
+│   │   │   ├── repo/
+│   │   │   │   └── ReservationRepository.java
+│   │   │   ├── service/
+│   │   │   │   ├── ReservationService.java
+│   │   │   │   └── BookingMxApplication.java
+│   │   └── resources/
+│   │       └── application.properties
+│   ├── test/java/com/bookingmx/
+│   │   └── ReservationServiceTest.java
 │   ├── pom.xml
 │   └── TESTING_NOTES.md
 │
 ├── frontend/
+│   ├── coverage/
 │   ├── js/
+│   │   ├── **tests**/
+│   │   │   ├── domHandler.test.js
+│   │   │   ├── formHandler.test.js
+│   │   │   ├── graph.test.js
+│   │   │   └── reservationService.test.js
 │   │   ├── api.js
-│   │   ├── graph.js
 │   │   ├── domHandler.js
 │   │   ├── formHandler.js
+│   │   ├── graph.js
 │   │   └── reservationService.js
-│   │
-│   ├── js/__tests__/
-│   │   ├── graph.test.js
-│   │   ├── domHandler.test.js
-│   │   ├── formHandler.test.js
-│   │   └── reservationService.test.js
-│   │
 │   ├── screenshots/
+│   ├── .babelrc
+│   ├── app.js
 │   ├── index.html
-│   ├── styles.css
 │   ├── jest.config.js
 │   ├── package.json
 │   ├── package-lock.json
-│   └── TESTING_NOTES.md
+│   ├── styles.css
+│   ├── TESTING_NOTES.md
+│   └── .gitignore
 │
 └── README.md
-```
 
-> Note: `backend/src/test/...` contains the JUnit test(s) for the reservations service.  
-> `frontend/js/__tests__/` contains all Jest test files for frontend modules.
+````
 
 ---
 
-## ⚙️ Running the Backend
+# ⚙️ 3. Installation & Setup
 
-### Install & run
+## ▶ Backend Setup (Spring Boot)
+
+### **1. Navigate to the backend folder**
 ```bash
 cd backend
+````
+
+### **2. Build the project**
+
+```bash
+mvn clean install
+```
+
+### **3. Run the server**
+
+```bash
 mvn spring-boot:run
 ```
 
-Backend URL: **http://localhost:8080**
+### **4. API Base URL**
+
+```
+http://localhost:8080/api/reservations
+```
 
 ---
 
-## 💻 Running the Frontend
+## ▶ Frontend Setup (JavaScript + Jest)
 
-### Install dependencies
+### **1. Navigate to the frontend folder**
+
 ```bash
 cd frontend
+```
+
+### **2. Install dependencies**
+
+```bash
 npm install
 ```
 
-### Start development server
-Use your preferred local server (Live Server, Vite, or similar). Example with Live Server for VSCode:
-```
-Right click index.html → "Open with Live Server"
-```
+### **3. Run the local server (optional)**
 
-Frontend example URL: **http://localhost:5500**
+Most students simply open `index.html`,
+but you can also run an HTTP server:
 
----
-
-## 🧪 Tests — Files & Commands
-
-### Backend (JUnit)
-**Test files**
-```
-backend/src/test/java/com/bookingmx/ReservationServiceTest.java
-```
-
-**Run**
 ```bash
-cd backend
-mvn clean test
+npx http-server .
 ```
 
-### Frontend (Jest)
-**Test files**
-```
-frontend/js/__tests__/
-  ├─ graph.test.js
-  ├─ domHandler.test.js
-  ├─ formHandler.test.js
-  └─ reservationService.test.js
-```
+### **4. Run Jest tests**
 
-**Run**
 ```bash
-cd frontend
-npm test -- --coverage
+npm test
 ```
 
-Coverage report will be generated in:
+### **5. Generate coverage report**
+
+```bash
+npm run test:coverage
+```
+
+Results appear in:
+
 ```
 frontend/coverage/
 ```
 
 ---
 
-## 📸 Screenshots (Evidence)
+# 🧪 4. Tests Description (Sprint 3 requirement)
 
-Place your screenshots in:
+BOOKINGMX includes **backend unit tests** and **frontend unit tests**.
+
+---
+
+## ✔ Backend Tests (JUnit 5)
+
+Location:
 
 ```
-frontend/screenshots/
+backend/test/java/com/bookingmx/ReservationServiceTest.java
 ```
 
-Suggested filenames:
-- `test-results.png` — full Jest output and coverage summary
-- `coverage-report.png` — coverage/lcov-report/index.html screenshot
-- `form-success.png` — reservation success UI
-- `form-error.png` — reservation validation error UI
+Covers:
+
+* Creating reservations
+* Validations for missing/invalid data
+* Updating status
+* Canceling reservations
+* Finding by guest name
+
+### Example: running backend tests
+
+```bash
+mvn test
+```
+
+🎯 Expected result (snippet):
+
+```
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+```
 
 ---
 
-## 📦 Technologies Used
+## ✔ Frontend Tests (Jest)
 
-**Backend**
-- Java 21
-- Spring Boot
-- Maven
-- JUnit
-- JaCoCo (coverage)
+Located in:
 
-**Frontend**
-- Vanilla JavaScript (ES6+)
-- HTML5 / CSS3
-- Jest + JSDOM (testing)
+```
+frontend/js/__tests__/
+```
+
+### Includes tests for:
+
+| File                           | Purpose                                               |
+| ------------------------------ | ----------------------------------------------------- |
+| **reservationService.test.js** | Validates price calculations and field validation     |
+| **formHandler.test.js**        | Simulates form submission logic                       |
+| **domHandler.test.js**         | Tests DOM rendering behavior                          |
+| **graph.test.js**              | Graph algorithms, city validation, geometry utilities |
+
+### Run tests:
+
+```bash
+npm test
+```
+
+Expected output (snippet):
+
+```
+PASS js/__tests__/graph.test.js
+PASS js/__tests__/reservationService.test.js
+PASS js/__tests__/formHandler.test.js
+PASS js/__tests__/domHandler.test.js
+```
+
+### Coverage:
+
+```bash
+npm run test:coverage
+```
+
+You will find an HTML report in:
+
+```
+frontend/coverage/lcov-report/index.html
+```
 
 ---
 
-## 🧩 Key Features
+# 🎨 5. Frontend Overview
 
-- Create, update, cancel reservations via REST endpoints
-- Reservation validation and price calculation
-- Frontend modules separated by responsibility (API, UI, logic)
-- Graph module for nearby cities (data + basic visualization)
-- Unit tests for core logic and DOM behavior
+The frontend is modular and testable:
+
+### **api.js**
+
+* Simple REST client for the backend.
+* Supports: list, create, update, delete.
+
+### **reservationService.js**
+
+* Contains calculation logic.
+* Validates reservation fields.
+
+### **formHandler.js**
+
+* Orchestrates submission + validation.
+* Generates UI result messages.
+
+### **domHandler.js**
+
+* DOM manipulation layer.
+
+### **graph.js**
+
+* Undirected graph implementation.
+* Nearby city calculator.
+* Geometry-based utility for Jest tests.
+* Minimal canvas drawing function.
+
+All modules follow **pure function design** to increase testability.
 
 ---
 
-## 📘 Author
+# 🚀 6. How to Run the Full System
 
-Developed by **Luis Mendoza (MerlecK7)**  
-GitHub: https://github.com/Merleck7  
-LinkedIn: https://www.linkedin.com/in/luismendoza2007/
+### **1. Start backend**
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+### **2. Start frontend**
+
+Open:
+
+```
+frontend/index.html
+```
+
+OR run:
+
+```bash
+npx http-server .
+```
+
+### **3. Create a reservation**
+
+The frontend will call:
+
+```
+POST /api/reservations
+```
+
+---
+
+# 🏁 7. Sprint 3 Deliverables Checklist
+
+| Requirement                         | Status            |
+| ----------------------------------- | ----------------- |
+| Backend unit tests                  | ✔ Completed       |
+| Frontend unit tests (Jest)          | ✔ Completed       |
+| Documentation of tests              | ✔ Included        |
+| Example execution & expected output | ✔ Included        |
+| Frontend module documentation       | ✔ Added           |
+| Complete README.md                  | ✔ Delivered       |
+| Project structure                   | ✔ Fully described |
+
+---
+
+# 📚 8. License
+
+Educational use — open for academic work, assignments, and practice.
+
+---
+
+# 🙌 Author
+
+Developed by **Luis Mendoza**
+Backend + Frontend + Testing Integration
+BOOKINGMX — Software Engineering Learning Project
+
+```
+
+---

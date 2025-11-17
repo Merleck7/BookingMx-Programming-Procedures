@@ -4,67 +4,86 @@
   <meta charset="utf-8" />
   <title>BookingMx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
-  <header>
-    <h1>BookingMx</h1>
-    <p>Nearby cities graph & simple reservations demo</p>
+  <header class="header">
+    <div class="header-content">
+      <h1>BookingMx</h1>
+      <p>Nearby cities graph & simple reservations demo</p>
+    </div>
   </header>
 
-  <main class="grid">
-    <section>
-      <h2>Nearby Cities Graph</h2>
-      <form id="graph-form">
-        <label>
-          Destination:
+  <main class="container">
+
+    <!-- Nearby Cities Graph -->
+    <section class="card glass">
+      <h2 class="section-title">Nearby Cities Graph</h2>
+
+      <form id="graph-form" class="form">
+        <div class="form-group">
+          <label>Destination</label>
           <input id="destination" type="text" placeholder="e.g., Guadalajara" required />
-        </label>
-        <label>
-          Max Distance (km):
+        </div>
+
+        <div class="form-group">
+          <label>Max Distance (km)</label>
           <input id="maxDistance" type="number" min="0" step="1" value="250" />
-        </label>
-        <button type="submit">Find Nearby</button>
+        </div>
+
+        <button class="btn primary" type="submit">Find Nearby</button>
       </form>
 
-      <div id="graph-output" class="card">
-        <h3>Results</h3>
+      <div id="graph-output" class="sub-card">
+        <h3 class="sub-title">Results</h3>
         <ul id="nearby-list"></ul>
       </div>
     </section>
 
-    <section>
-      <h2>Reservations</h2>
-      <form id="reservation-form">
-        <label>
-          Guest Name:
+    <!-- Reservations -->
+    <section class="card glass">
+      <h2 class="section-title">Reservations</h2>
+
+      <form id="reservation-form" class="form">
+        <div class="form-group">
+          <label>Guest Name</label>
           <input id="guestName" required />
-        </label>
-        <label>
-          Hotel Name:
+        </div>
+
+        <div class="form-group">
+          <label>Hotel Name</label>
           <input id="hotelName" required />
-        </label>
-        <label>
-          Check-in:
+        </div>
+
+        <div class="form-group">
+          <label>Check-in</label>
           <input id="checkIn" type="date" required />
-        </label>
-        <label>
-          Check-out:
+        </div>
+
+        <div class="form-group">
+          <label>Check-out</label>
           <input id="checkOut" type="date" required />
-        </label>
-        <button type="submit">Create Reservation</button>
+        </div>
+
+        <button class="btn primary" type="submit">Create Reservation</button>
       </form>
 
-      <div class="card">
-        <h3>All Reservations</h3>
-        <button id="refresh">Refresh</button>
+      <div class="sub-card">
+        <div class="sub-header">
+          <h3 class="sub-title">All Reservations</h3>
+          <button id="refresh" class="btn secondary small">Refresh</button>
+        </div>
+
         <ul id="reservation-list"></ul>
       </div>
     </section>
+
   </main>
 
-  <footer>
-    <small>© BookingMx</small>
+  <footer class="footer">
+    <small>© 2025 BookingMx</small>
   </footer>
 
   <script type="module" src="./app.js"></script>
