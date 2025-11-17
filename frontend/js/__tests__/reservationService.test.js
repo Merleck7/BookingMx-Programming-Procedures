@@ -1,3 +1,13 @@
+/**
+ * Reservation Service Unit Tests
+ * -------------------------------
+ * Validates the business logic for:
+ *  - Price calculation
+ *  - Reservation data validation
+ *
+ * This module ensures that both positive and negative scenarios are covered.
+ */
+
 import { calculateTotalPrice, validateReservation } from "../reservationService.js";
 
 describe("Reservation Service", () => {

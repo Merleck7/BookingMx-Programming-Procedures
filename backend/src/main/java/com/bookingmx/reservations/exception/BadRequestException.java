@@ -3,6 +3,10 @@ package com.bookingmx.reservations.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Custom exception used when the client sends invalid information
+ * that violates business rules or validation constraints.
+ */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String m) { super(m); }

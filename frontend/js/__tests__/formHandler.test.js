@@ -1,5 +1,14 @@
 /**
- * @jest-environment jsdom
+ * Form Handler Unit Tests
+ * ------------------------
+ * This module tests form submission logic, ensuring:
+ *  - Input is validated
+ *  - Total price is calculated when valid
+ *  - Errors are displayed for invalid reservations
+ *
+ * Mocking strategy:
+ *  - reservationService: validate + calculate functions
+ *  - domHandler: DOM output for results
  */
 
 import { handleFormSubmit } from "../formHandler.js";
@@ -9,6 +18,7 @@ import * as domHandler from "../domHandler.js";
 describe("Form Handler", () => {
 
   beforeEach(() => {
+    // Inject mock DOM before each test
     document.body.innerHTML = `
       <form id="bookingForm">
         <input id="name" value="Luis" />
@@ -23,6 +33,7 @@ describe("Form Handler", () => {
   });
 
   test("successful form submission renders result", () => {
+    // Mock valid reservation service behavior
     jest.spyOn(reservationService, "validateReservation").mockReturnValue(true);
     jest.spyOn(reservationService, "calculateTotalPrice").mockReturnValue(2400);
     jest.spyOn(domHandler, "renderReservationResult").mockImplementation(() => {});
@@ -37,6 +48,7 @@ describe("Form Handler", () => {
   });
 
   test("invalid reservation shows error message", () => {
+    // Simulate validation failure
     jest.spyOn(reservationService, "validateReservation").mockImplementation(() => {
       throw new Error("Invalid data");
     });
