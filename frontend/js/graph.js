@@ -7,14 +7,11 @@
  *  - Normalizes all input city names into proper Title Case
  *  - Nearby-city search logic
  *  - Backwards-compatible Graph class + buildGraph()
- * 
- * This file replaces the old sampleData-based implementation.
- * app.js should import: { graphData, getNearbyCities, buildGraph }
+ *  - Legacy functions for Jest tests: findNearbyCities() and drawGraph()
  */
 
 // -------------------------------------------------------------
-// Utility: Normalize city names to Title Case so lookups are consistent.
-// Example: "mexico city" → "Mexico City"
+// Utility: Normalize city names into proper Title Case.
 // -------------------------------------------------------------
 export function normalizeCityName(name) {
   if (!name || typeof name !== "string") return "";
@@ -125,16 +122,12 @@ const rawGraphData = {
 };
 
 // -------------------------------------------------------------
-// Exported graphData — but with no modifications.
-// Title Case keys remain the official representation.
+// Exported dataset
 // -------------------------------------------------------------
 export const graphData = rawGraphData;
 
 // -------------------------------------------------------------
-// Returns nearby cities for a given city, ignoring capitalization.
-// Example:
-//   getNearbyCities("mexico city")
-//   getNearbyCities("MeXiCo CiTy")
+// getNearbyCities — case-insensitive lookup
 // -------------------------------------------------------------
 export function getNearbyCities(city, maxDistanceKm = 250) {
   const normalized = normalizeCityName(city);
@@ -143,14 +136,13 @@ export function getNearbyCities(city, maxDistanceKm = 250) {
   if (!edges) return [];
 
   return Object.entries(edges)
-    .filter(([name, dist]) => dist <= maxDistanceKm)
+    .filter(([_, dist]) => dist <= maxDistanceKm)
     .map(([name, dist]) => ({ city: name, distance: dist }))
     .sort((a, b) => a.distance - b.distance);
 }
 
 // -------------------------------------------------------------
-// Graph class for compatibility with existing front-end code.
-// Now also normalizes city names on insertion and lookup.
+// Graph class — now case-insensitive
 // -------------------------------------------------------------
 export class Graph {
   constructor() {
@@ -180,16 +172,14 @@ export class Graph {
 }
 
 // -------------------------------------------------------------
-// Legacy data validation — unnecessary with the new dataset,
-// but preserved because app.js still imports it.
+// Legacy: validateGraphData (kept for compatibility)
 // -------------------------------------------------------------
-export function validateGraphData(data) {
+export function validateGraphData() {
   return { ok: true };
 }
 
 // -------------------------------------------------------------
-// buildGraph(): builds a Graph() instance from rawGraphData.
-// Case-insensitive support is handled internally.
+// Legacy: buildGraph()
 // -------------------------------------------------------------
 export function buildGraph() {
   const g = new Graph();
@@ -203,4 +193,50 @@ export function buildGraph() {
   }
 
   return g;
+}
+
+// -------------------------------------------------------------
+// LEGACY FUNCTIONS USED BY EXISTING TESTS
+// DO NOT REMOVE — Jest tests depend on them
+// -------------------------------------------------------------
+
+/**
+ * findNearbyCities(origin, cities)
+ * Legacy version used in Jest tests.
+ * Works with coordinate-based city arrays:
+ *   [{ name, x, y }]
+ */
+export function findNearbyCities(origin, cities) {
+  if (!origin || !Array.isArray(cities)) {
+    throw new Error("Invalid city data");
+  }
+  if (cities.length === 0) return [];
+
+  return cities
+    .filter(c => c.name !== origin.name)
+    .map(c => {
+      const dx = c.x - origin.x;
+      const dy = c.y - origin.y;
+      return { ...c, distance: Math.sqrt(dx * dx + dy * dy) };
+    })
+    .sort((a, b) => a.distance - b.distance);
+}
+
+/**
+ * drawGraph(canvas, cities)
+ * Legacy drawing function required by graph.test.js.
+ */
+export function drawGraph(canvas, cities) {
+  if (!canvas || !canvas.getContext) {
+    throw new Error("Invalid canvas element");
+  }
+
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  cities.forEach(city => {
+    ctx.beginPath();
+    ctx.arc(city.x ?? 0, city.y ?? 0, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
 }
