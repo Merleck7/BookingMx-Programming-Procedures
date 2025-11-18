@@ -1,44 +1,45 @@
 /**
- * Frontend Main Controller Script
- * --------------------------------
- * Handles:
- *  - Graph UI interactions for locating nearby cities.
- *  - Reservation UI: listing, creating, and canceling reservations.
- *  - Communication with service modules (graph.js and api.js).
+ * -----------------------------------------------------------------------
+ * Frontend controller for:
+ *   - Nearby Cities Graph search
+ *   - Reservation management (list, create, cancel)
+ * 
+ * Uses:
+ *   graph.js → graphData, getNearbyCities
+ *   api.js   → listReservations, createReservation, cancelReservation
+ * -----------------------------------------------------------------------
  */
 
-import { sampleData, validateGraphData, buildGraph, getNearbyCities } from "./js/graph.js";
+import { graphData, getNearbyCities, validateGraphData, buildGraph } from "./js/graph.js";
 import { listReservations, createReservation, cancelReservation } from "./js/api.js";
 
 /* ---------------------------------------------------------------------
-   GRAPH UI LOGIC
+   NEARBY CITIES GRAPH UI
 ------------------------------------------------------------------------*/
 
-// DOM references for graph functionality
+// DOM references
 const form = document.getElementById("graph-form");
 const destinationEl = document.getElementById("destination");
 const maxDistanceEl = document.getElementById("maxDistance");
 const nearbyList = document.getElementById("nearby-list");
 
-// ---------------------------------------------------------------------------
-// Validate and build the graph using the imported sampleData.
-// This used to crash because sampleData was not exported previously.
-// ---------------------------------------------------------------------------
-const validation = validateGraphData(sampleData);
-const graph = validation.ok ? buildGraph(sampleData.cities, sampleData.edges) : null;
+// -------------------------------------------------------------
+// Validate/build graph (kept for compatibility with earlier Sprints)
+// -------------------------------------------------------------
+const validation = validateGraphData(graphData);
+const graph = validation.ok ? buildGraph() : null;
 
 /**
- * Handles graph search form submission.
- * Retrieves nearby cities based on user input and updates the UI list.
+ * Handles "Find Nearby" search.
+ * Reads user input and displays cities reachable within maxDistance km.
  */
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (!graph) return;
 
   const dest = destinationEl.value.trim();
   const maxD = Number(maxDistanceEl.value);
 
-  const results = getNearbyCities(graph, dest, maxD);
+  const results = getNearbyCities(dest, maxD);
 
   nearbyList.innerHTML = "";
   if (results.length === 0) {
@@ -46,24 +47,23 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  for (const r of results) {
+  results.forEach(r => {
     const li = document.createElement("li");
     li.textContent = `${r.city} — ${r.distance} km`;
     nearbyList.appendChild(li);
-  }
+  });
 });
 
 /* ---------------------------------------------------------------------
-   RESERVATIONS UI LOGIC
+   RESERVATION SYSTEM UI
 ------------------------------------------------------------------------*/
 
-// DOM references for reservation UI
 const resForm = document.getElementById("reservation-form");
 const refreshBtn = document.getElementById("refresh");
 const listEl = document.getElementById("reservation-list");
 
 /**
- * Refreshes reservation list from backend.
+ * Fetches reservation list from backend and renders it.
  */
 async function refreshReservations() {
   listEl.innerHTML = "<li>Loading...</li>";
@@ -72,7 +72,7 @@ async function refreshReservations() {
     const items = await listReservations();
     listEl.innerHTML = "";
 
-    for (const r of items) {
+    items.forEach(r => {
       const li = document.createElement("li");
 
       li.innerHTML = `
@@ -80,16 +80,15 @@ async function refreshReservations() {
         (${r.checkIn} → ${r.checkOut}) [${r.status}]
         <button data-id="${r.id}" class="cancel">Cancel</button>
       `;
-
       listEl.appendChild(li);
-    }
+    });
   } catch (e) {
     listEl.innerHTML = `<li>Error: ${e.message}</li>`;
   }
 }
 
 /**
- * Handles reservation creation.
+ * Creates a new reservation using backend API.
  */
 resForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -111,7 +110,7 @@ resForm.addEventListener("submit", async (e) => {
 });
 
 /**
- * Reservation cancellation handler.
+ * Handles reservation cancellation.
  */
 listEl.addEventListener("click", async (e) => {
   const btn = e.target.closest(".cancel");
